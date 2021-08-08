@@ -43,9 +43,9 @@ describe('When: I use the reading list feature', () => {
   });
 
   it('Then: I should be able to add book to the reading list and mark it as finished', () => {
-    cy.get('input[type="search"]').type('test2');
+    cy.get('input[type="search"]').type('test');
 
-    cy.get('[data-testing="search-button"]:enabled').click()
+    cy.get('[data-testing="search-button"]').click()
 
     cy.get('[data-testing="add-book"]').first().click();
 

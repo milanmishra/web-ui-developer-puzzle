@@ -56,7 +56,7 @@ describe('ReadingListComponent', () => {
   });
 
   it('should dispatch markedAsFinished action when check button is clicked', () => {
-    const readingList = { ...createReadingListItem('A'), isAdded: true };
+    const readingList = createReadingListItem('A');
     const markAsFinishedBtn = fixture.nativeElement.querySelector(
       '[data-testing="mark-as-finished"]'
     );

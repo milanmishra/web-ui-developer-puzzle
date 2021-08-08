@@ -77,7 +77,7 @@ const readingListReducer = createReducer(
       ...state,
       error: action.error,
     };
-  }),
+  })
 );
 
 export function reducer(state: State | undefined, action: Action) {

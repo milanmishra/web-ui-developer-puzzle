@@ -7,6 +7,12 @@ import {
 } from './reading-list.reducer';
 import { createBook, createReadingListItem } from '@tmo/shared/testing';
 
+const readingResponse = {
+  reading: {
+    bookId: 'ptiYBAAAQBAJ',
+  },
+};
+
 describe('Reading List Reducer', () => {
   describe('valid Reading List actions', () => {
     let state: State;

@@ -56,7 +56,7 @@ describe('ReadingList Selectors', () => {
 
       expect(result).toBe(3);
     });
-    
+
     it('should return the list of Books with finished property as false when getAllBooks() gets invoked', () => {
       const results = ToReadSelectors.getAllBooks(state)
 
