@@ -66,7 +66,6 @@ describe('ToReadEffects', () => {
         );
         done();
       });
-
       httpMock
         .expectOne(`/api/reading-list/test/finished`)
         .flush({ ...updatedData });
