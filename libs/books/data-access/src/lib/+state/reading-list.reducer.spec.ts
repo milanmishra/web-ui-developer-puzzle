@@ -34,7 +34,7 @@ describe('Reading List Reducer', () => {
 
     it('should add book addition to the state when confirmedAddToReadingList action is dipatched', () => {
       const action = ReadingListActions.confirmedAddToReadingList({
-        book: createBook('C')
+        book: createBook('C'), showSnackBar: true
       });
 
       const result: State = reducer(state, action);
@@ -44,7 +44,7 @@ describe('Reading List Reducer', () => {
 
     it('should remove book addition from the state when confirmedRemoveFromReadingList action is dispatched', () => {
       const action = ReadingListActions.confirmedRemoveFromReadingList({
-        item: createReadingListItem('B')
+        item: createReadingListItem('B'), showSnackBar: true
       });
 
       const result: State = reducer(state, action);
