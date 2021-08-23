@@ -6,8 +6,10 @@ import {
   getAllBooks,
   searchBooks,
 } from '@tmo/books/data-access';
-import { FormBuilder, FormControl, Validators } from '@angular/forms';
+import { FormBuilder } from '@angular/forms';
 import { Book, okReadsConstants } from '@tmo/shared/models';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
 @Component({
   selector: 'tmo-book-search',
   templateUrl: './book-search.component.html',
@@ -17,8 +19,10 @@ export class BookSearchComponent {
   bookSearchConstants = okReadsConstants;
   books$ = this.store.select(getAllBooks);
 
+  private subscription$: Subscription;
+
   searchForm = this.fb.group({
-    term: new FormControl(null, [Validators.required]),
+    term: '',
   });
 
   constructor(
@@ -26,13 +30,20 @@ export class BookSearchComponent {
     private readonly fb: FormBuilder
   ) {}
 
+  ngOnInit(): void {
+    this.subscription$ = this.searchForm.controls['term'].valueChanges
+      .pipe(debounceTime(500), distinctUntilChanged())
+      .subscribe(() => {
+        this.searchBooks();
+      });
+  }
+
   addBookToReadingList = (book: Book) => {
     this.store.dispatch(addToReadingList({ book }));
   };
 
   searchExample = () => {
     this.searchForm.controls.term.setValue('javascript');
-    this.searchBooks();
   };
 
   searchBooks = () => {
@@ -43,5 +54,9 @@ export class BookSearchComponent {
   resetSearch = () => {
     this.searchForm.controls.term.setValue(null);
     this.store.dispatch(clearSearch());
+  };
+
+  ngOnDestroy = () => {
+    this.subscription$.unsubscribe();
   };
 }
