@@ -63,7 +63,7 @@
               aria-label="want to read button"
               data-testing="add-book"
             >
-              {{ bookSearchConstants.BUTTONS.WANT_TO_READ_BUTTON }}
+              {{ b.finished ? bookSearchConstants.BUTTONS.FINISHED_BUTTON : bookSearchConstants.BUTTONS.WANT_TO_READ_BUTTON  }}
             </button>
           </div>
         </div>

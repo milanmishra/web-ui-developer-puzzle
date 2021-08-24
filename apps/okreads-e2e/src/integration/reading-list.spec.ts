@@ -31,7 +31,7 @@ describe('When: I use the reading list feature', () => {
 
     cy.wait(5000);
 
-    cy.get('[data-testing="add-book"]').first().click();
+    cy.get('[data-testing="add-book"]:enabled').first().click();
 
     cy.get('[data-testing="toggle-reading-list"]').click();
 
@@ -40,5 +40,28 @@ describe('When: I use the reading list feature', () => {
     cy.get('[data-testing="remove-book"]').last().click();
 
     cy.get('[data-testing="reading-list-item"]').should('have.length', 0);
+  });
+
+  it('Then: I should be able to add book to the reading list and mark it as finished', () => {
+    cy.get('input[type="search"]').type('test2');
+
+    cy.get('[data-testing="search-button"]:enabled').click()
+
+    cy.get('[data-testing="add-book"]').first().click();
+
+    cy.get('[data-testing="toggle-reading-list"]').click();
+
+    cy.get('.reading-list-item').should('have.length', 1);
+
+    cy.get('[data-testing="add-book"]').first().contains('Want to Read');
+
+    cy.get('[data-testing="mark-as-finished"]').click();
+
+    cy.get('[data-testing="finished-book-on"]')
+      .first()
+      .invoke('text')
+      .should('match', /^ Finished book on: /);
+
+    cy.get('[data-testing="add-book"]').first().contains('Finished');
   });
 });

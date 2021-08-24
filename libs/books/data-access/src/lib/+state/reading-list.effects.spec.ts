@@ -3,10 +3,10 @@ import { Observable, of } from 'rxjs';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { provideMockStore } from '@ngrx/store/testing';
 import { HttpTestingController } from '@angular/common/http/testing';
-import { SharedTestingModule } from '@tmo/shared/testing';
+import { createReadingListItem, SharedTestingModule } from '@tmo/shared/testing';
 import { ReadingListEffects } from './reading-list.effects';
 import * as ReadingListActions from './reading-list.actions';
-import { Book, okReadsConstants, ReadingListItem } from '@tmo/shared/models';
+import { okReadsConstants } from '@tmo/shared/models';
 import { Action } from '@ngrx/store';
 
 describe('ToReadEffects', () => {
@@ -40,6 +40,61 @@ describe('ToReadEffects', () => {
       });
 
       httpMock.expectOne(`${okReadsConstants.API_LINKS.READING_API}`).flush([]);
+    });
+  });
+
+  describe('markBookAsFinished$', () => {
+    it('should mark book as finished when confirmedMarkAsFinished action is dispatched', (done) => {
+      const updatedData = {
+        ...createReadingListItem('test'),
+        finished: true,
+        finishedDate: '2021-08-12T09:18:15.626Z',
+      };
+
+      actions = of(
+        ReadingListActions.markBookAsFinished({
+          item: updatedData,
+        })
+      );
+
+      effects.markBookAsFinished$.subscribe((action) => {
+        action['item'].finishedDate = '2021-08-12T09:18:15.626Z';
+        expect(action).toEqual(
+          ReadingListActions.confirmedMarkBookAsFinished({
+            item: updatedData,
+          })
+        );
+        done();
+      });
+      httpMock
+        .expectOne(`/api/reading-list/test/finished`)
+        .flush({ ...updatedData });
+    });
+
+    it('should not mark book as finished when api fails', (done) => {
+      actions = of(
+        ReadingListActions.markBookAsFinished({
+          item: createReadingListItem('test'),
+        })
+      );
+
+      effects.markBookAsFinished$.subscribe((action) => {
+        expect(action).toEqual(
+          ReadingListActions.failedMarkBookAsFinished({
+            error: 'API error',
+          })
+        );
+        done();
+      });
+
+      httpMock
+        .expectOne(
+          `${okReadsConstants.API_LINKS.READING_API}/test/${okReadsConstants.CONSTANTS.FINISHED}`
+        )
+        .error(new ErrorEvent('HttpErrorResponse'), {
+          status: 500,
+          statusText: 'API error',
+        });
     });
   });
 });
